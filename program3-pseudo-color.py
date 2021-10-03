@@ -4,6 +4,11 @@ import math
 import random
 from utils import *
 
+# map unit vector (-1, 1)
+# to rgb color (0,1)
+def pseudocolor(v):
+    return 0.5 * (vec3(1,1,1) + v)
+
 width = 512
 height = width
 
@@ -26,8 +31,12 @@ for row in range(height):
         point_on_the_window = vec3(2.0*u - 1.0, 2.0*v -1.0, -window_depth)
         ray_direction = unit_vector(point_on_the_window)
 
-        if hit_sphere(ray_origin, ray_direction, sphere_centers[0], sphere_radii[0]) < 1.0e8 :
-            im[row,column,:] = vec3(1, 0, 0)
+        t = hit_sphere(ray_origin, ray_direction, sphere_centers[0], sphere_radii[0])
+
+        if t < 1.0e8:
+            hit_point = ray_origin + t * ray_direction
+            surface_normal = (1 / sphere_radii[0])*(hit_point - sphere_centers[0])
+            im[row,column,:] = pseudocolor(surface_normal)
         else:
             im[row,column,:] = background_color(ray_direction)
 
