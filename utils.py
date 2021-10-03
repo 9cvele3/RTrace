@@ -40,3 +40,20 @@ def hit_sphere(ray_origin, ray_direction, center, radius):
         if t > 0.0001:
             return t
     return 1.0e9
+
+# returns (hit_something, t_min (of the closest sphere), i (index of the closest sphere)
+def hit_array(ray_origin, ray_direction, centers, radii):
+    hit_something = False
+    t_min = 1.0e20
+    i_min = -1
+
+    for i in range(len(centers)):
+        t = hit_sphere(ray_origin, ray_direction, centers[i], radii[i])
+
+        if (t < 1.0e8 and t > 0.001):
+            hit_something = True
+            t_min = t
+            i_min = i
+
+    return (hit_something, t_min, i_min)
+    
